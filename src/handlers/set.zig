@@ -5,11 +5,11 @@ const syvore = @import("../core/syvore.zig");
 const tokenize = @import("../utils/tokenize.zig");
 
 pub fn Set(args: []const u8) []const u8 {
-    var tokens: std.mem.SplitIterator(u8, .sequence) = tokenize.Tokenize(args, null);
+    var tokens: std.mem.TokenIterator(u8, .sequence) = tokenize.Tokenize(args, null);
     const key: []const u8 = tokens.next().?;
     const value: []const u8 = tokens.next().?;
 
-    var syStore = syvore.SyvoreStore.init(std.heap.page_allocator);
-    syStore.set(key, value) catch unreachable;
+    var syStore = syvore.GetSyvoreStore();
+    syStore.set(key, value) catch return "ERROR";
     return "OK";
 }

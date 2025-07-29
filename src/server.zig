@@ -9,7 +9,7 @@ pub fn handleConnection(conn: std.net.Stream) !void {
     const bytes_read = try conn.read(&buf);
     const line = std.mem.trimRight(u8, buf[0..bytes_read], "\r\n");
 
-    var tokens: std.mem.SplitIterator(u8, .sequence) = lib.tokenize.Tokenize(line, null);
+    var tokens: std.mem.TokenIterator(u8, .sequence) = lib.tokenize.Tokenize(line, null);
     if (tokens.next()) |cmd| {
         const command = lib.commands.ParseCommand(cmd) orelse {
             std.debug.print("Invalid command: {s}\n", .{cmd});
