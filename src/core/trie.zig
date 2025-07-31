@@ -18,9 +18,10 @@ pub const SyvoreTrie = struct {
     }
 
     pub fn set(self: *SyvoreTrie, full_key: []const u8, value: []const u8) !void {
-        var tokens = tokenize.Tokenize(full_key, null);
-        var current: *atom.SyvoreAtom = &self.root;
+        const key_copy = try self.allocator.dupe(u8, full_key);
         const value_copy = try self.allocator.dupe(u8, value);
+        var tokens = tokenize.Tokenize(key_copy, null);
+        var current: *atom.SyvoreAtom = &self.root;
 
         while (tokens.next()) |segment| {
             const maybe_child = current.findChild(segment);
