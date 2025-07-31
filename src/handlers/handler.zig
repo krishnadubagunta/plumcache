@@ -4,3 +4,4 @@ const std = @import("std");
 
 pub const ping = @import("ping.zig");
 pub const set = @import("set.zig");
+pub const get = @import("get.zig");

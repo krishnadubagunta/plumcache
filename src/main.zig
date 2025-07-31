@@ -6,9 +6,9 @@ const lib = @import("syvore_lib");
 const server = @import("server.zig");
 
 pub fn main() !void {
-    var allocator = std.heap.page_allocator;
+    const allocator = std.heap.page_allocator;
     const address = try std.net.Address.parseIp("127.0.0.1", 8080);
-    try lib.syvore.InitSyvoreStore(&allocator);
+    try lib.syvore.InitSyvoreStore(allocator);
 
     var listener = try address.listen(.{
         .reuse_address = true,

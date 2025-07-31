@@ -30,13 +30,18 @@ pub const PureSyvoreAtom = struct {
     created_at: i64,
 
     pub fn init(path: []const u8, value: ?[]const u8, options: ?AtomOptions) PureSyvoreAtom {
-        const access_count = options.?.access_count;
+        var access_count: i16 = 0;
+        var last_accessed: i64 = 0;
+        if (options) |opt| {
+            access_count = opt.access_count;
+            last_accessed = opt.last_accessed;
+        }
         const now = std.time.timestamp();
         return PureSyvoreAtom{
             .path = path,
             .value = value,
             .access_count = access_count,
-            .last_accessed = undefined,
+            .last_accessed = last_accessed,
             .created_at = now,
         };
     }
@@ -51,7 +56,11 @@ pub const PureSyvoreAtom = struct {
     }
 
     pub fn updateAccessCount(self: *PureSyvoreAtom, access_count: ?i16) void {
-        self.access_count = access_count orelse self.access_count +% 1;
+        if (access_count) |ac| {
+            self.access_count = ac;
+        } else {
+            self.access_count = self.access_count +% 1;
+        }
         self.last_accessed = std.time.timestamp();
     }
 };
@@ -60,14 +69,14 @@ pub const SyvoreAtom = struct {
     pure: PureSyvoreAtom,
     children: std.ArrayList(*SyvoreAtom),
 
-    pub fn init(allocator: *std.mem.Allocator, key: []const u8, value: ?[]const u8) !SyvoreAtom {
+    pub fn init(allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !SyvoreAtom {
         return SyvoreAtom{
             .pure = PureSyvoreAtom.init(key, value, null),
-            .children = std.ArrayList(*SyvoreAtom).init(allocator.*),
+            .children = std.ArrayList(*SyvoreAtom).init(allocator),
         };
     }
 
-    pub fn deinit(self: *SyvoreAtom, allocator: *std.mem.Allocator) void {
+    pub fn deinit(self: *SyvoreAtom, allocator: std.mem.Allocator) void {
         for (self.children.items) |child| {
             child.deinit(allocator);
             allocator.destroy(child);
@@ -75,7 +84,7 @@ pub const SyvoreAtom = struct {
         self.children.deinit();
     }
 
-    pub fn addChild(self: *SyvoreAtom, allocator: *std.mem.Allocator, key: []const u8, value: ?[]const u8) !*SyvoreAtom {
+    pub fn addChild(self: *SyvoreAtom, allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !*SyvoreAtom {
         const child = try allocator.create(SyvoreAtom);
         child.* = try SyvoreAtom.init(allocator, key, value);
         try self.children.append(child);

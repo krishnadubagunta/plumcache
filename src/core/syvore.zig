@@ -19,13 +19,13 @@ const tokenize = @import("../utils/tokenize.zig");
 
 /// Store is the data structure that is used to store the data in the SyvoreDB.
 const Store = struct {
-    allocator: *std.mem.Allocator,
+    allocator: std.mem.Allocator,
     entries: std.StringHashMap(entry.Entry),
 
-    pub fn init(allocator: *std.mem.Allocator) Store {
+    pub fn init(allocator: std.mem.Allocator) Store {
         return Store{
             .allocator = allocator,
-            .entries = std.StringHashMap(entry.Entry).init(allocator.*),
+            .entries = std.StringHashMap(entry.Entry).init(allocator),
         };
     }
 
@@ -40,7 +40,8 @@ pub fn GetSyvoreStore() *SyvoreStore {
     return syvore_store;
 }
 
-pub fn InitSyvoreStore(allocator: *std.mem.Allocator) !void {
+pub fn InitSyvoreStore(allocator: std.mem.Allocator) !void {
+    syvore_store = allocator.create(SyvoreStore) catch return error.SyvoreStoreInitError;
     syvore_store.* = SyvoreStore.init(allocator);
 }
 
@@ -53,6 +54,7 @@ pub fn InitSyvoreStore(allocator: *std.mem.Allocator) !void {
 /// Secondary store is the backup store that is used to store the data that is accessed less frequently.
 ///
 pub const SyvoreStore = struct {
+    allocator: std.mem.Allocator,
     primary_store: Store,
     secondary_store: Store,
 
@@ -62,8 +64,9 @@ pub const SyvoreStore = struct {
     ///
     /// It returns a SyvoreStore.
     ///
-    pub fn init(allocator: *std.mem.Allocator) SyvoreStore {
+    pub fn init(allocator: std.mem.Allocator) SyvoreStore {
         return SyvoreStore{
+            .allocator = allocator,
             .primary_store = Store.init(allocator),
             .secondary_store = Store.init(allocator),
         };
@@ -86,15 +89,17 @@ pub const SyvoreStore = struct {
     ///
     /// It returns an entry.Entry.
     ///
-    fn get_entry(_: *SyvoreStore, key: []const u8, value: []const u8, fetched_entry: ?entry.Entry) entry.Entry {
+    fn get_entry(self: *SyvoreStore, key: []const u8, value: []const u8, fetched_entry: ?entry.Entry) !entry.Entry {
+        const value_copy = try self.allocator.dupe(u8, value);
+        const key_copy = try self.allocator.dupe(u8, key);
         var pure_value: atom.PureSyvoreAtom = undefined;
         if (fetched_entry) |existing_entry| {
-            pure_value = atom.PureSyvoreAtom.init(key, value, atom.AtomOptions{ .access_count = existing_entry.value.atom.access_count + 1, .last_accessed = std.time.milliTimestamp() });
+            pure_value = atom.PureSyvoreAtom.init(key_copy, value_copy, atom.AtomOptions{ .access_count = existing_entry.value.atom.access_count + 1, .last_accessed = std.time.milliTimestamp() });
         } else {
-            pure_value = atom.PureSyvoreAtom.init(key, value, null);
+            pure_value = atom.PureSyvoreAtom.init(key_copy, value_copy, null);
         }
         const new_entry_value = entry.EntryValue{ .atom = pure_value };
-        const new_entry = entry.Entry{ .key = key, .value = new_entry_value };
+        const new_entry = entry.Entry{ .key = key_copy, .value = new_entry_value };
 
         return new_entry;
     }
@@ -131,17 +136,49 @@ pub const SyvoreStore = struct {
             // If it doesn't exist in secondary store, create a new entry and set the value in the primary store.
 
             if (self.primary_store.entries.get(key)) |fetched_entry| {
-                const new_entry = self.get_entry(key, value, fetched_entry);
-                _ = self.primary_store.entries.remove(key);
-                self.primary_store.entries.put(key, new_entry) catch unreachable;
+                const new_entry = try self.get_entry(key, value, fetched_entry);
+                self.primary_store.entries.put(new_entry.key, new_entry) catch unreachable;
             } else if (self.secondary_store.entries.get(key)) |fetched_entry| {
-                const new_entry = self.get_entry(key, value, fetched_entry);
+                const new_entry = try self.get_entry(key, value, fetched_entry);
                 _ = self.secondary_store.entries.remove(key);
-                self.primary_store.entries.put(key, new_entry) catch unreachable;
+                self.primary_store.entries.put(new_entry.key, new_entry) catch unreachable;
             } else {
-                const new_entry = self.get_entry(key, value, null);
-                self.primary_store.entries.put(key, new_entry) catch unreachable;
+                const new_entry = try self.get_entry(key, value, null);
+                self.primary_store.entries.put(new_entry.key, new_entry) catch unreachable;
             }
         }
+    }
+
+    /// get gets the value for the given key.
+    ///
+    /// It gets the value for the given key.
+    ///
+    /// It returns a ?[]const u8.
+    ///
+    pub fn get(self: *SyvoreStore, key: []const u8) ?[]const u8 {
+        var fetched_value: ?[]const u8 = null;
+        if (std.mem.indexOf(u8, key, ":") != null) {
+            var tokens = tokenize.Tokenize(key, null);
+            const namespace: []const u8 = tokens.next().?;
+
+            if (self.primary_store.entries.get(namespace)) |fetched_entry| {
+                var fetched_trie = fetched_entry.value.trie;
+                fetched_value = fetched_trie.get(tokens.rest()) orelse null;
+            } else if (self.secondary_store.entries.get(namespace)) |fetched_entry| {
+                var fetched_trie = fetched_entry.value.trie;
+                fetched_value = fetched_trie.get(tokens.rest()) orelse null;
+            } else {
+                fetched_value = null;
+            }
+        } else {
+            if (self.primary_store.entries.get(key)) |fetched_entry| {
+                fetched_value = fetched_entry.value.atom.value orelse null;
+            } else if (self.secondary_store.entries.get(key)) |fetched_entry| {
+                fetched_value = fetched_entry.value.atom.value orelse null;
+            } else {
+                fetched_value = null;
+            }
+        }
+        return fetched_value;
     }
 };
