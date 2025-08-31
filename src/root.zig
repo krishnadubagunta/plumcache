@@ -1,4 +1,4 @@
-//! SyvoreDB
+//! PlumDB
 //! A simple key-value store with a trie-based data structure.
 //!
 //! This is a work in progress and is not yet ready for production.
@@ -7,7 +7,7 @@
 //!
 //! The data structure is a trie-based data structure.
 //!
-pub const syvore = @import("core/syvore.zig");
+pub const plum = @import("core/plum.zig");
 pub const commands = @import("utils/commands.zig");
 pub const handlers = @import("handlers/handler.zig");
 pub const tokenize = @import("utils/tokenize.zig");

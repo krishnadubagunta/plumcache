@@ -2,26 +2,26 @@ const std = @import("std");
 const atom = @import("atom.zig");
 const tokenize = @import("../utils/tokenize.zig");
 
-pub const SyvoreTrie = struct {
-    root: atom.SyvoreAtom,
+pub const PlumTrie = struct {
+    root: atom.PlumAtom,
     allocator: std.mem.Allocator,
 
-    pub fn init(allocator: std.mem.Allocator) !SyvoreTrie {
-        return SyvoreTrie{
+    pub fn init(allocator: std.mem.Allocator) !PlumTrie {
+        return PlumTrie{
             .allocator = allocator,
-            .root = try atom.SyvoreAtom.init(allocator, "", null),
+            .root = try atom.PlumAtom.init(allocator, "", null),
         };
     }
 
-    pub fn deinit(self: *SyvoreTrie) void {
+    pub fn deinit(self: *PlumTrie) void {
         self.root.deinit(self.allocator);
     }
 
-    pub fn set(self: *SyvoreTrie, full_key: []const u8, value: []const u8) !void {
+    pub fn set(self: *PlumTrie, full_key: []const u8, value: []const u8) !void {
         const key_copy = try self.allocator.dupe(u8, full_key);
         const value_copy = try self.allocator.dupe(u8, value);
         var tokens = tokenize.Tokenize(key_copy, null);
-        var current: *atom.SyvoreAtom = &self.root;
+        var current: *atom.PlumAtom = &self.root;
 
         while (tokens.next()) |segment| {
             const maybe_child = current.findChild(segment);
@@ -36,9 +36,9 @@ pub const SyvoreTrie = struct {
         current.pure.setValue(value_copy);
     }
 
-    pub fn get(self: *SyvoreTrie, full_key: []const u8) ?[]const u8 {
+    pub fn get(self: *PlumTrie, full_key: []const u8) ?[]const u8 {
         var tokens = tokenize.Tokenize(full_key, null);
-        var current: *atom.SyvoreAtom = &self.root;
+        var current: *atom.PlumAtom = &self.root;
 
         while (tokens.next()) |segment| {
             const child = current.findChild(segment) orelse return null;

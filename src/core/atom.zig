@@ -22,14 +22,14 @@ pub const AtomOptions = struct {
 ///
 /// Created at is the timestamp of the node's creation.
 ///
-pub const PureSyvoreAtom = struct {
+pub const PurePlumAtom = struct {
     path: []const u8,
     value: ?[]const u8,
     access_count: i16,
     last_accessed: i64,
     created_at: i64,
 
-    pub fn init(path: []const u8, value: ?[]const u8, options: ?AtomOptions) PureSyvoreAtom {
+    pub fn init(path: []const u8, value: ?[]const u8, options: ?AtomOptions) PurePlumAtom {
         var access_count: i16 = 0;
         var last_accessed: i64 = 0;
         if (options) |opt| {
@@ -37,7 +37,7 @@ pub const PureSyvoreAtom = struct {
             last_accessed = opt.last_accessed;
         }
         const now = std.time.timestamp();
-        return PureSyvoreAtom{
+        return PurePlumAtom{
             .path = path,
             .value = value,
             .access_count = access_count,
@@ -46,16 +46,16 @@ pub const PureSyvoreAtom = struct {
         };
     }
 
-    pub fn deinit(self: *PureSyvoreAtom) void {
+    pub fn deinit(self: *PurePlumAtom) void {
         self.path.deinit();
         self.value.deinit();
     }
 
-    pub fn setValue(self: *PureSyvoreAtom, value: ?[]const u8) void {
+    pub fn setValue(self: *PurePlumAtom, value: ?[]const u8) void {
         self.value = value.?;
     }
 
-    pub fn updateAccessCount(self: *PureSyvoreAtom, access_count: ?i16) void {
+    pub fn updateAccessCount(self: *PurePlumAtom, access_count: ?i16) void {
         if (access_count) |ac| {
             self.access_count = ac;
         } else {
@@ -65,18 +65,20 @@ pub const PureSyvoreAtom = struct {
     }
 };
 
-pub const SyvoreAtom = struct {
-    pure: PureSyvoreAtom,
-    children: std.ArrayList(*SyvoreAtom),
+pub const PlumAtom = struct {
+    pure: PurePlumAtom,
+    children: std.array_list.Managed(*PlumAtom),
 
-    pub fn init(allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !SyvoreAtom {
-        return SyvoreAtom{
-            .pure = PureSyvoreAtom.init(key, value, null),
-            .children = std.ArrayList(*SyvoreAtom).init(allocator),
+    pub fn init(allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !PlumAtom {
+        const children = std.array_list.Managed(*PlumAtom).init(allocator);
+
+        return PlumAtom{
+            .pure = PurePlumAtom.init(key, value, null),
+            .children = children,
         };
     }
 
-    pub fn deinit(self: *SyvoreAtom, allocator: std.mem.Allocator) void {
+    pub fn deinit(self: *PlumAtom, allocator: std.mem.Allocator) void {
         for (self.children.items) |child| {
             child.deinit(allocator);
             allocator.destroy(child);
@@ -84,14 +86,14 @@ pub const SyvoreAtom = struct {
         self.children.deinit();
     }
 
-    pub fn addChild(self: *SyvoreAtom, allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !*SyvoreAtom {
-        const child = try allocator.create(SyvoreAtom);
-        child.* = try SyvoreAtom.init(allocator, key, value);
+    pub fn addChild(self: *PlumAtom, allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !*PlumAtom {
+        const child = try allocator.create(PlumAtom);
+        child.* = try PlumAtom.init(allocator, key, value);
         try self.children.append(child);
         return child;
     }
 
-    pub fn findChild(self: *const SyvoreAtom, key: []const u8) ?*SyvoreAtom {
+    pub fn findChild(self: *const PlumAtom, key: []const u8) ?*PlumAtom {
         for (self.children.items) |child| {
             if (std.mem.eql(u8, child.pure.path, key)) {
                 return child;

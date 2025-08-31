@@ -1,6 +1,6 @@
 //! Server module handles all the incoming connections and handles the commands.
 const std = @import("std");
-const lib = @import("syvore_lib");
+const lib = @import("plum_lib");
 
 pub fn handleConnection(conn: std.net.Stream) !void {
     defer conn.close();
