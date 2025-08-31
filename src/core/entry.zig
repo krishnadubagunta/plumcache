@@ -1,8 +1,8 @@
-//! Entry is the data structure that is used to store the data in the Syvore.
+//! Entry is the data structure that is used to store the data in the Plum.
 //!
 //! It is a key-value pair.
 //!
-//! The key is the path to the data in the Syvore.
+//! The key is the path to the data in the Plum.
 //!
 //! The value can be an atom or a trie.
 //!
@@ -17,6 +17,6 @@ pub const Entry = struct {
 };
 
 pub const EntryValue = union(enum) {
-    atom: atom.PureSyvoreAtom,
-    trie: trie.SyvoreTrie,
+    atom: atom.PurePlumAtom,
+    trie: trie.PlumTrie,
 };
