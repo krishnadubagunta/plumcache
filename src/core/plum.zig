@@ -56,7 +56,6 @@ pub fn InitPlumStore(allocator: std.mem.Allocator) !void {
 pub const PlumStore = struct {
     allocator: std.mem.Allocator,
     primary_store: Store,
-    secondary_store: Store,
 
     /// init initializes the PlumStore.
     ///
@@ -68,7 +67,6 @@ pub const PlumStore = struct {
         return PlumStore{
             .allocator = allocator,
             .primary_store = Store.init(allocator),
-            .secondary_store = Store.init(allocator),
         };
     }
 
@@ -80,7 +78,6 @@ pub const PlumStore = struct {
     ///
     pub fn deinit(self: *PlumStore) void {
         self.primary_store.deinit();
-        self.secondary_store.deinit();
     }
 
     /// get_entry gets the entry for the given key.
@@ -118,13 +115,6 @@ pub const PlumStore = struct {
                 // If it exists in the primary store, then update the value in the primary store.
                 var fetched_trie = fetched_entry.value.trie;
                 try fetched_trie.set(tokens.rest(), value);
-            } else if (self.secondary_store.entries.get(namespace)) |fetched_entry| {
-                var fetched_trie = fetched_entry.value.trie;
-                var new_primary_trie = try trie.PlumTrie.init(self.primary_store.allocator);
-                try new_primary_trie.set(tokens.rest(), value);
-                fetched_trie.deinit();
-                _ = self.secondary_store.entries.remove(namespace);
-                self.primary_store.entries.put(namespace, entry.Entry{ .key = namespace, .value = entry.EntryValue{ .trie = new_primary_trie } }) catch unreachable;
             } else {
                 var new_primary_trie = try trie.PlumTrie.init(self.primary_store.allocator);
                 try new_primary_trie.set(tokens.rest(), value);
@@ -137,10 +127,6 @@ pub const PlumStore = struct {
 
             if (self.primary_store.entries.get(key)) |fetched_entry| {
                 const new_entry = try self.get_entry(key, value, fetched_entry);
-                self.primary_store.entries.put(new_entry.key, new_entry) catch unreachable;
-            } else if (self.secondary_store.entries.get(key)) |fetched_entry| {
-                const new_entry = try self.get_entry(key, value, fetched_entry);
-                _ = self.secondary_store.entries.remove(key);
                 self.primary_store.entries.put(new_entry.key, new_entry) catch unreachable;
             } else {
                 const new_entry = try self.get_entry(key, value, null);
@@ -164,16 +150,11 @@ pub const PlumStore = struct {
             if (self.primary_store.entries.get(namespace)) |fetched_entry| {
                 var fetched_trie = fetched_entry.value.trie;
                 fetched_value = fetched_trie.get(tokens.rest()) orelse null;
-            } else if (self.secondary_store.entries.get(namespace)) |fetched_entry| {
-                var fetched_trie = fetched_entry.value.trie;
-                fetched_value = fetched_trie.get(tokens.rest()) orelse null;
             } else {
                 fetched_value = null;
             }
         } else {
             if (self.primary_store.entries.get(key)) |fetched_entry| {
-                fetched_value = fetched_entry.value.atom.value orelse null;
-            } else if (self.secondary_store.entries.get(key)) |fetched_entry| {
                 fetched_value = fetched_entry.value.atom.value orelse null;
             } else {
                 fetched_value = null;
