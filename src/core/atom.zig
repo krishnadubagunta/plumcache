@@ -67,12 +67,14 @@ pub const PurePlumAtom = struct {
 
 pub const PlumAtom = struct {
     pure: PurePlumAtom,
-    children: std.ArrayList(*PlumAtom),
+    children: std.array_list.Managed(*PlumAtom),
 
     pub fn init(allocator: std.mem.Allocator, key: []const u8, value: ?[]const u8) !PlumAtom {
+        const children = std.array_list.Managed(*PlumAtom).init(allocator);
+
         return PlumAtom{
             .pure = PurePlumAtom.init(key, value, null),
-            .children = std.ArrayList(*PlumAtom).init(allocator),
+            .children = children,
         };
     }
 
