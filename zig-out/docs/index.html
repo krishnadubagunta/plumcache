@@ -3,6 +3,55 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="PlumCache - A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            name="keywords"
+            content="cache, key-value store, trie, in-memory, namespace, performance, zig, data structure, storage"
+        />
+        <meta name="author" content="Krishna Dubagunta" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
+        <meta property="og:title" content="PlumCache Documentation" />
+        <meta
+            property="og:description"
+            content="A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            property="og:image"
+            content="https://raw.githubusercontent.com/krishnadubagunta/plumcache/main/assets/plumcache-social.png"
+        />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+            property="twitter:url"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
+        <meta property="twitter:title" content="PlumCache Documentation" />
+        <meta
+            property="twitter:description"
+            content="A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            property="twitter:image"
+            content="https://raw.githubusercontent.com/krishnadubagunta/plumcache/main/assets/plumcache-social.png"
+        />
+
+        <!-- GitHub -->
+        <meta
+            name="github:repo"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
+
         <title>PlumCache Documentation</title>
         <link
             rel="icon"
@@ -331,7 +380,11 @@
     <body>
         <nav>
             <a class="logo" href="#">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 120 120"
+                    fill="none"
+                >
                     <defs>
                         <linearGradient
                             id="plumGradient"
@@ -345,65 +398,71 @@
                             <stop offset="100%" style="stop-color: #f59e0b" />
                         </linearGradient>
                     </defs>
-                    <!-- Main plum body -->
-                    <ellipse
-                        cx="80"
-                        cy="70"
-                        rx="35"
-                        ry="40"
-                        fill="url(#plumGradient)"
-                    />
 
-                    <!-- Plum dimple -->
-                    <path
-                        d="M65 45 Q80 35 95 45"
-                        stroke="#7c3aed"
-                        stroke-width="2"
-                        fill="none"
-                        opacity="0.6"
-                    />
+                    <!-- Wrap everything in a group with scaling and shifting -->
+                    <g transform="translate(-15,0) scale(0.75)">
+                        <!-- Main plum body -->
+                        <ellipse
+                            cx="60"
+                            cy="70"
+                            rx="35"
+                            ry="40"
+                            fill="url(#plumGradient)"
+                        />
 
-                    <!-- Trie structure overlay -->
-                    <g
-                        opacity="0.8"
-                        stroke="white"
-                        stroke-width="1.5"
-                        fill="none"
-                    >
-                        <!-- Root -->
-                        <circle cx="80" cy="60" r="3" fill="white" />
+                        <!-- Plum dimple -->
+                        <path
+                            d="M45 45 Q60 35 75 45"
+                            stroke="#7c3aed"
+                            stroke-width="2"
+                            fill="none"
+                            opacity="0.6"
+                        />
 
-                        <!-- Level 1 branches -->
-                        <line x1="80" y1="60" x2="65" y2="75" />
-                        <line x1="80" y1="60" x2="95" y2="75" />
-                        <line x1="80" y1="60" x2="80" y2="80" />
+                        <!-- Trie structure overlay -->
+                        <g
+                            opacity="0.8"
+                            stroke="white"
+                            stroke-width="1.5"
+                            fill="none"
+                        >
+                            <circle cx="60" cy="60" r="3" fill="white" />
+                            <line x1="60" y1="60" x2="45" y2="75" />
+                            <line x1="60" y1="60" x2="75" y2="75" />
+                            <line x1="60" y1="60" x2="60" y2="80" />
+                            <circle cx="45" cy="75" r="2" fill="white" />
+                            <circle cx="75" cy="75" r="2" fill="white" />
+                            <circle cx="60" cy="80" r="2" fill="white" />
+                            <line x1="45" y1="75" x2="35" y2="90" />
+                            <line x1="45" y1="75" x2="50" y2="90" />
+                            <line x1="75" y1="75" x2="85" y2="90" />
+                            <circle cx="35" cy="90" r="1.5" fill="white" />
+                            <circle cx="50" cy="90" r="1.5" fill="white" />
+                            <circle cx="85" cy="90" r="1.5" fill="white" />
+                        </g>
 
-                        <!-- Level 1 nodes -->
-                        <circle cx="65" cy="75" r="2" fill="white" />
-                        <circle cx="95" cy="75" r="2" fill="white" />
-                        <circle cx="80" cy="80" r="2" fill="white" />
-
-                        <!-- Level 2 branches -->
-                        <line x1="65" y1="75" x2="55" y2="90" />
-                        <line x1="65" y1="75" x2="70" y2="90" />
-                        <line x1="95" y1="75" x2="105" y2="90" />
-
-                        <!-- Level 2 nodes -->
-                        <circle cx="55" cy="90" r="1.5" fill="white" />
-                        <circle cx="70" cy="90" r="1.5" fill="white" />
-                        <circle cx="105" cy="90" r="1.5" fill="white" />
+                        <!-- Cache layers effect -->
+                        <g opacity="0.3">
+                            <ellipse
+                                cx="60"
+                                cy="70"
+                                rx="45"
+                                ry="50"
+                                fill="none"
+                                stroke="url(#plumGradient)"
+                                stroke-width="1"
+                            />
+                            <ellipse
+                                cx="60"
+                                cy="70"
+                                rx="55"
+                                ry="60"
+                                fill="none"
+                                stroke="url(#plumGradient)"
+                                stroke-width="0.5"
+                            />
+                        </g>
                     </g>
-
-                    <style>
-                        #text {
-                            fill: #1f2937;
-                        }
-                        @media (prefers-color-scheme: dark) {
-                            #text {
-                                fill: #e5e5e5;
-                            }
-                        }
-                    </style>
                 </svg>
             </a>
         </nav>
