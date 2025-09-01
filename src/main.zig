@@ -4,10 +4,12 @@
 const std = @import("std");
 const lib = @import("plum_lib");
 const server = @import("server.zig");
+const orchestratorLib = @import("orchestrator.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
     const address = try std.net.Address.parseIp("127.0.0.1", 8080);
+    orchestratorLib.Orchestrator.init(allocator);
     try lib.plum.InitPlumStore(allocator);
 
     var listener = try address.listen(.{
