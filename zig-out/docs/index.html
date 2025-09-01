@@ -1,452 +1,591 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zig Documentation</title>
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTMgMTQwIj48ZyBmaWxsPSIjRjdBNDFEIj48Zz48cG9seWdvbiBwb2ludHM9IjQ2LDIyIDI4LDQ0IDE5LDMwIi8+PHBvbHlnb24gcG9pbnRzPSI0NiwyMiAzMywzMyAyOCw0NCAyMiw0NCAyMiw5NSAzMSw5NSAyMCwxMDAgMTIsMTE3IDAsMTE3IDAsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMzEsOTUgMTIsMTE3IDQsMTA2Ii8+PC9nPjxnPjxwb2x5Z29uIHBvaW50cz0iNTYsMjIgNjIsMzYgMzcsNDQiLz48cG9seWdvbiBwb2ludHM9IjU2LDIyIDExMSwyMiAxMTEsNDQgMzcsNDQgNTYsMzIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTE2LDk1IDk3LDExNyA5MCwxMDQiLz48cG9seWdvbiBwb2ludHM9IjExNiw5NSAxMDAsMTA0IDk3LDExNyA0MiwxMTcgNDIsOTUiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTUwLDAgNTIsMTE3IDMsMTQwIDEwMSwyMiIvPjwvZz48Zz48cG9seWdvbiBwb2ludHM9IjE0MSwyMiAxNDAsNDAgMTIyLDQ1Ii8+PHBvbHlnb24gcG9pbnRzPSIxNTMsMjIgMTUzLDExNyAxMDYsMTE3IDEyMCwxMDUgMTI1LDk1IDEzMSw5NSAxMzEsNDUgMTIyLDQ1IDEzMiwzNiAxNDEsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTI1LDk1IDEzMCwxMTAgMTA2LDExNyIvPjwvZz48L2c+PC9zdmc+">
-    <style type="text/css">
-      *, *::before, *::after {
-        box-sizing: border-box;
-      }
-      body {
-        font-family: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
-        color: #000000;
-      }
-      .hidden {
-        display: none;
-      }
-      table {
-        width: 100%;
-      }
-      a {
-        color: #2A6286;
-      }
-      pre{
-        font-family:"Source Code Pro",monospace;
-        font-size:1em;
-        background-color:#F5F5F5;
-        padding: 1em;
-        margin: 0;
-        overflow-x: auto;
-      }
-      :not(pre) > code {
-        white-space: break-spaces;
-      }
-      code {
-        font-family:"Source Code Pro",monospace;
-        font-size: 0.9em;
-      }
-      code a {
-        color: #000000;
-      }
-      #listFields > div, #listParams > div {
-        margin-bottom: 1em;
-      }
-      #hdrName a {
-        font-size: 0.7em;
-        padding-left: 1em;
-      }
-      .fieldDocs {
-        border: 1px solid #F5F5F5;
-        border-top: 0px;
-        padding: 1px 1em;
-      }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="PlumCache - A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            name="keywords"
+            content="cache, key-value store, trie, in-memory, namespace, performance, zig, data structure, storage"
+        />
+        <meta name="author" content="Krishna Dubagunta" />
+        <meta name="robots" content="index, follow" />
 
-      #logo {
-        width: 8em;
-        padding: 0.5em 1em;
-      }
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
+        <meta property="og:title" content="PlumCache Documentation" />
+        <meta
+            property="og:description"
+            content="A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            property="og:image"
+            content="https://raw.githubusercontent.com/krishnadubagunta/plumcache/main/assets/plumcache-social.png"
+        />
 
-      #navWrap {
-        width: -moz-available;
-        width: -webkit-fill-available;
-        width: stretch;
-        margin-left: 11em;
-      }
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+            property="twitter:url"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
+        <meta property="twitter:title" content="PlumCache Documentation" />
+        <meta
+            property="twitter:description"
+            content="A high-performance namespace-oriented trie-based in-memory key-value store with pluggable architecture and orchestration capabilities."
+        />
+        <meta
+            property="twitter:image"
+            content="https://raw.githubusercontent.com/krishnadubagunta/plumcache/main/assets/plumcache-social.png"
+        />
 
-      #search {
-        width: 100%;
-      }
+        <!-- GitHub -->
+        <meta
+            name="github:repo"
+            content="https://github.com/krishnadubagunta/plumcache"
+        />
 
-      nav {
-        width: 10em;
-        float: left;
-      }
-      nav h2 {
-        font-size: 1.2em;
-        text-decoration: underline;
-        margin: 0;
-        padding: 0.5em 0;
-        text-align: center;
-      }
-      nav p {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-      }
-      section {
-        clear: both;
-        padding-top: 1em;
-      }
-      section h1 {
-        border-bottom: 1px dashed;
-        margin: 0 0;
-      }
-      section h2 {
-        font-size: 1.3em;
-        margin: 0.5em 0;
-        padding: 0;
-        border-bottom: 1px solid;
-      }
-      #listNav {
-        list-style-type: none;
-        margin: 0.5em 0 0 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #f1f1f1;
-      }
-      #listNav li {
-        float:left;
-      }
-      #listNav li a {
-        display: block;
-        color: #000;
-        text-align: center;
-        padding: .5em .8em;
-        text-decoration: none;
-      }
-      #listNav li a:hover {
-        background-color: #555;
-        color: #fff;
-      }
-      #listNav li a.active {
-        background-color: #FFBB4D;
-        color: #000;
-      }
+        <title>PlumCache Documentation</title>
+        <link
+            rel="icon"
+            href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiBmaWxsPSJub25lIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGx1bUdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzkzMzNlYSIvPgo8c3RvcCBvZmZzZXQ9IjUwJSIgc3R5bGU9InN0b3AtY29sb3I6I2VjNDg5OSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmNTllMGIiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8ZWxsaXBzZSBjeD0iNjAiIGN5PSI3MCIgcng9IjM1IiByeT0iNDAiIGZpbGw9InVybCgjcGx1bUdyYWRpZW50KSIvPgo8cGF0aCBkPSJNNDUgNDUgUTYwIDM1IDc1IDQ1IiBzdHJva2U9IiM3YzNhZWQiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CjxnIG9wYWNpdHk9IjAuOCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIzIiBmaWxsPSJ3aGl0ZSIvPgo8bGluZSB4MT0iNjAiIHkxPSI2MCIgeDI9IjQ1IiB5Mj0iNzUiLz4KPGxpbmUgeDE9IjYwIiB5MT0iNjAiIHgyPSI3NSIgeTI9Ijc1Ii8+CjxsaW5lIHgxPSI2MCIgeTE9IjYwIiB4Mj0iNjAiIHkyPSI4MCIvPgo8Y2lyY2xlIGN4PSI0NSIgY3k9Ijc1IiByPSIyIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSIyIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjgwIiByPSIyIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjwvc3ZnPg=="
+        />
+        <style type="text/css">
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Roboto,
+                    "Segoe UI",
+                    sans-serif;
+                color: #000000;
+            }
+            .hidden {
+                display: none;
+            }
+            table {
+                width: 100%;
+            }
+            a {
+                color: #9333ea;
+            }
+            pre {
+                font-family: "Source Code Pro", monospace;
+                font-size: 1em;
+                background-color: #f5f5f5;
+                padding: 1em;
+                margin: 0;
+                overflow-x: auto;
+            }
+            :not(pre) > code {
+                white-space: break-spaces;
+            }
+            code {
+                font-family: "Source Code Pro", monospace;
+                font-size: 0.9em;
+            }
+            code a {
+                color: #000000;
+            }
+            #listFields > div,
+            #listParams > div {
+                margin-bottom: 1em;
+            }
+            #hdrName a {
+                font-size: 0.7em;
+                padding-left: 1em;
+            }
+            .fieldDocs {
+                border: 1px solid #f5f5f5;
+                border-top: 0px;
+                padding: 1px 1em;
+            }
 
-      #helpDialog {
-        width: 21em;
-        height: 21em;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #333;
-        color: #fff;
-        border: 1px solid #fff;
-      }
-      #helpDialog h1 {
-        text-align: center;
-        font-size: 1.5em;
-      }
-      #helpDialog dt, #helpDialog dd {
-        display: inline;
-        margin: 0 0.2em;
-      }
-      kbd {
-        color: #000;
-        background-color: #fafbfc;
-        border-color: #d1d5da;
-        border-bottom-color: #c6cbd1;
-        box-shadow-color: #c6cbd1;
-        display: inline-block;
-        padding: 0.3em 0.2em;
-        font: 1.2em monospace;
-        line-height: 0.8em;
-        vertical-align: middle;
-        border: solid 1px;
-        border-radius: 3px;
-        box-shadow: inset 0 -1px 0;
-        cursor: default;
-      }
+            #logo {
+                width: 8em;
+                padding: 0.5em 1em;
+            }
 
-      #errors {
-        background-color: #faa;
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        max-height: min(20em, 50vh);
-        padding: 0.5em;
-        overflow: auto;
-      }
-      #errors h1 {
-        font-size: 1.5em;
-      }
-      #errors pre {
-        background-color: #fcc;
-      }
+            #navWrap {
+                width: -moz-available;
+                width: -webkit-fill-available;
+                width: stretch;
+                margin-left: 11em;
+            }
 
-      #listSearchResults li.selected {
-        background-color: #93e196;
-      }
+            #search {
+                width: 100%;
+            }
 
-      #tableFnErrors dt {
-        font-weight: bold;
-      }
+            nav {
+                width: 10em;
+                float: left;
+            }
+            nav h2 {
+                font-size: 1.2em;
+                text-decoration: underline;
+                margin: 0;
+                padding: 0.5em 0;
+                text-align: center;
+            }
+            nav p {
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+            section {
+                clear: both;
+                padding-top: 1em;
+            }
+            section h1 {
+                border-bottom: 1px dashed;
+                margin: 0 0;
+            }
+            section h2 {
+                font-size: 1.3em;
+                margin: 0.5em 0;
+                padding: 0;
+                border-bottom: 1px solid;
+            }
+            #listNav {
+                list-style-type: none;
+                margin: 0.5em 0 0 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #f3f4f6;
+            }
+            #listNav li {
+                float: left;
+            }
+            #listNav li a {
+                display: block;
+                color: #000;
+                text-align: center;
+                padding: 0.5em 0.8em;
+                text-decoration: none;
+            }
+            #listNav li a:hover {
+                background-color: #9333ea;
+                color: #fff;
+            }
+            #listNav li a.active {
+                background-color: #ec4899;
+                color: #fff;
+            }
 
-      dl > div {
-          padding: 0.5em;
-          border: 1px solid #c0c0c0;
-          margin-top: 0.5em;
-      }
+            #helpDialog {
+                width: 21em;
+                height: 21em;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #1f2937;
+                color: #fff;
+                border: 1px solid #9333ea;
+            }
+            #helpDialog h1 {
+                text-align: center;
+                font-size: 1.5em;
+            }
+            #helpDialog dt,
+            #helpDialog dd {
+                display: inline;
+                margin: 0 0.2em;
+            }
+            kbd {
+                color: #000;
+                background-color: #fafbfc;
+                border-color: #d1d5da;
+                border-bottom-color: #c6cbd1;
+                box-shadow-color: #c6cbd1;
+                display: inline-block;
+                padding: 0.3em 0.2em;
+                font: 1.2em monospace;
+                line-height: 0.8em;
+                vertical-align: middle;
+                border: solid 1px;
+                border-radius: 3px;
+                box-shadow: inset 0 -1px 0;
+                cursor: default;
+            }
 
-      td, th {
-        text-align: unset;
-        vertical-align: top;
-        margin: 0;
-        padding: 0.5em;
-        max-width: 20em;
-        text-overflow: ellipsis;
-        overflow-x: hidden;
-      }
+            #errors {
+                background-color: #faa;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                max-height: min(20em, 50vh);
+                padding: 0.5em;
+                overflow: auto;
+            }
+            #errors h1 {
+                font-size: 1.5em;
+            }
+            #errors pre {
+                background-color: #fcc;
+            }
 
-      ul.columns {
-        column-width: 20em;
-      }
+            #listSearchResults li.selected {
+                background-color: #ec4899;
+                color: #fff;
+            }
 
-      .tok-kw {
-          color: #333;
-          font-weight: bold;
-      }
-      .tok-str {
-          color: #d14;
-      }
-      .tok-builtin {
-          color: #0086b3;
-      }
-      .tok-comment {
-          color: #777;
-          font-style: italic;
-      }
-      .tok-fn {
-          color: #900;
-          font-weight: bold;
-      }
-      .tok-null {
-          color: #008080;
-      }
-      .tok-number {
-          color: #008080;
-      }
-      .tok-type {
-          color: #458;
-          font-weight: bold;
-      }
+            #tableFnErrors dt {
+                font-weight: bold;
+            }
 
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #111;
-          color: #bbb;
-        }
-        pre {
-          background-color: #222;
-          color: #ccc;
-        }
-        a {
-          color: #88f;
-        }
-        code a {
-          color: #ccc;
-        }
-        .fieldDocs {
-          border-color:#2A2A2A;
-        }
-        #listNav {
-          background-color: #333;
-        }
-        #listNav li a {
-          color: #fff;
-        }
-        #listNav li a:hover {
-          background-color: #555;
-          color: #fff;
-        }
-        #listNav li a.active {
-          background-color: #FFBB4D;
-          color: #000;
-        }
-        #listSearchResults li.selected {
-          background-color: #000;
-        }
-        #listSearchResults li.selected a {
-          color: #fff;
-        }
-        #errors {
-          background-color: #800;
-          color: #fff;
-        }
-        #errors pre {
-          background-color: #a00;
-          color: #fff;
-        }
-        dl > div {
-          border-color: #373737;
-        }
-        .tok-kw {
-            color: #eee;
-        }
-        .tok-str {
-            color: #2e5;
-        }
-        .tok-builtin {
-            color: #ff894c;
-        }
-        .tok-comment {
-            color: #aa7;
-        }
-        .tok-fn {
-            color: #B1A0F8;
-        }
-        .tok-null {
-            color: #ff8080;
-        }
-        .tok-number {
-            color: #ff8080;
-        }
-        .tok-type {
-            color: #68f;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <a class="logo" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140">
-        <g fill="#F7A41D">
-          <g>
-            <polygon points="46,22 28,44 19,30"/>
-            <polygon points="46,22 33,33 28,44 22,44 22,95 31,95 20,100 12,117 0,117 0,22" shape-rendering="crispEdges"/>
-            <polygon points="31,95 12,117 4,106"/>
-          </g>
-          <g>
-            <polygon points="56,22 62,36 37,44"/>
-            <polygon points="56,22 111,22 111,44 37,44 56,32" shape-rendering="crispEdges"/>
-            <polygon points="116,95 97,117 90,104"/>
-            <polygon points="116,95 100,104 97,117 42,117 42,95" shape-rendering="crispEdges"/>
-            <polygon points="150,0 52,117 3,140 101,22"/>
-          </g>
-          <g>
-            <polygon points="141,22 140,40 122,45"/>
-            <polygon points="153,22 153,117 106,117 120,105 125,95 131,95 131,45 122,45 132,36 141,22" shape-rendering="crispEdges"/>
-            <polygon points="125,95 130,110 106,117"/>
-          </g>
-        </g>
-        <style>
-        #text { fill: #121212 }
-        @media (prefers-color-scheme: dark) { #text { fill: #f2f2f2 } }
+            dl > div {
+                padding: 0.5em;
+                border: 1px solid #c0c0c0;
+                margin-top: 0.5em;
+            }
+
+            td,
+            th {
+                text-align: unset;
+                vertical-align: top;
+                margin: 0;
+                padding: 0.5em;
+                max-width: 20em;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
+            }
+
+            ul.columns {
+                column-width: 20em;
+            }
+
+            .tok-kw {
+                color: #333;
+                font-weight: bold;
+            }
+            .tok-str {
+                color: #d14;
+            }
+            .tok-builtin {
+                color: #0086b3;
+            }
+            .tok-comment {
+                color: #777;
+                font-style: italic;
+            }
+            .tok-fn {
+                color: #9333ea;
+                font-weight: bold;
+            }
+            .tok-null {
+                color: #008080;
+            }
+            .tok-number {
+                color: #008080;
+            }
+            .tok-type {
+                color: #ec4899;
+                font-weight: bold;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background-color: #0f0f0f;
+                    color: #e5e5e5;
+                }
+                pre {
+                    background-color: #1a1a1a;
+                    color: #ccc;
+                }
+                a {
+                    color: #c084fc;
+                }
+                code a {
+                    color: #e5e5e5;
+                }
+                .fieldDocs {
+                    border-color: #2a2a2a;
+                }
+                #listNav {
+                    background-color: #1f2937;
+                }
+                #listNav li a {
+                    color: #e5e5e5;
+                }
+                #listNav li a:hover {
+                    background-color: #9333ea;
+                    color: #fff;
+                }
+                #listNav li a.active {
+                    background-color: #ec4899;
+                    color: #fff;
+                }
+                #listSearchResults li.selected {
+                    background-color: #9333ea;
+                }
+                #listSearchResults li.selected a {
+                    color: #fff;
+                }
+                #errors {
+                    background-color: #7f1d1d;
+                    color: #fff;
+                }
+                #errors pre {
+                    background-color: #991b1b;
+                    color: #fff;
+                }
+                dl > div {
+                    border-color: #374151;
+                }
+                kbd {
+                    color: #000;
+                    background-color: #f3f4f6;
+                }
+                .tok-kw {
+                    color: #e5e5e5;
+                }
+                .tok-str {
+                    color: #34d399;
+                }
+                .tok-builtin {
+                    color: #fb7185;
+                }
+                .tok-comment {
+                    color: #9ca3af;
+                }
+                .tok-fn {
+                    color: #c084fc;
+                }
+                .tok-null {
+                    color: #f87171;
+                }
+                .tok-number {
+                    color: #f87171;
+                }
+                .tok-type {
+                    color: #60a5fa;
+                }
+            }
         </style>
-        <g id="text">
-          <g>
-            <polygon points="260,22 260,37 229,40 177,40 177,22" shape-rendering="crispEdges"/>
-            <polygon points="260,37 207,99 207,103 176,103 229,40 229,37"/>
-            <polygon points="261,99 261,117 176,117 176,103 206,99" shape-rendering="crispEdges"/>
-          </g>
-          <rect x="272" y="22" shape-rendering="crispEdges" width="22" height="95"/>
-          <g>
-            <polygon points="394,67 394,106 376,106 376,81 360,70 346,67" shape-rendering="crispEdges"/>
-            <polygon points="360,68 376,81 346,67"/>
-            <path d="M394,106c-10.2,7.3-24,12-37.7,12c-29,0-51.1-20.8-51.1-48.3c0-27.3,22.5-48.1,52-48.1    c14.3,0,29.2,5.5,38.9,14l-13,15c-7.1-6.3-16.8-10-25.9-10c-17,0-30.2,12.9-30.2,29.5c0,16.8,13.3,29.6,30.3,29.6    c5.7,0,12.8-2.3,19-5.5L394,106z"/>
-          </g>
-        </g>
-        </svg>
-      </a>
-    </nav>
-    <div id="navWrap">
-      <input type="search" id="search" autocomplete="off" spellcheck="false" placeholder="`s` to search, `?` to see more options">
-      <div id="sectNav" class="hidden"><ul id="listNav"></ul></div>
-    </div>
-    <section>
-    <p id="status">Loading...</p>
-    <h1 id="hdrName" class="hidden"><span></span><a href="#">[src]</a></h1>
-    <div id="fnProto" class="hidden">
-      <pre><code id="fnProtoCode"></code></pre>
-    </div>
-    <div id="tldDocs" class="hidden"></div>
-    <div id="sectParams" class="hidden">
-      <h2>Parameters</h2>
-      <div id="listParams">
-      </div>
-    </div>
-    <div id="sectFnErrors" class="hidden">
-      <h2>Errors</h2>
-      <div id="fnErrorsAnyError">
-        <p><span class="tok-type">anyerror</span> means the error set is known only at runtime.</p>
-      </div>
-      <div id="tableFnErrors"><dl id="listFnErrors"></dl></div>
-    </div>
-    <div id="sectSearchResults" class="hidden">
-      <h2>Search Results</h2>
-      <ul id="listSearchResults"></ul>
-    </div>
-    <div id="sectSearchNoResults" class="hidden">
-      <h2>No Results Found</h2>
-      <p>Press escape to exit search and then '?' to see more options.</p>
-    </div>
-    <div id="sectFields" class="hidden">
-      <h2>Fields</h2>
-      <div id="listFields">
-      </div>
-    </div>
-    <div id="sectTypes" class="hidden">
-      <h2>Types</h2>
-      <ul id="listTypes" class="columns">
-      </ul>
-    </div>
-    <div id="sectNamespaces" class="hidden">
-      <h2>Namespaces</h2>
-      <ul id="listNamespaces" class="columns">
-      </ul>
-    </div>
-    <div id="sectGlobalVars" class="hidden">
-      <h2>Global Variables</h2>
-      <table>
-        <tbody id="listGlobalVars">
-        </tbody>
-      </table>
-    </div>
-    <div id="sectValues" class="hidden">
-      <h2>Values</h2>
-      <table>
-        <tbody id="listValues">
-        </tbody>
-      </table>
-    </div>
-    <div id="sectFns" class="hidden">
-      <h2>Functions</h2>
-      <dl id="listFns">
-      </dl>
-    </div>
-    <div id="sectErrSets" class="hidden">
-      <h2>Error Sets</h2>
-      <ul id="listErrSets" class="columns">
-      </ul>
-    </div>
-    <div id="sectDocTests" class="hidden">
-      <h2>Example Usage</h2>
-      <pre><code id="docTestsCode"></code></pre>
-    </div>
-    <div id="sectSource" class="hidden">
-      <h2>Source Code</h2>
-      <pre><code id="sourceText"></code></pre>
-    </div>
-    </section>
-    <div id="helpDialog" class="hidden">
-      <h1>Keyboard Shortcuts</h1>
-      <dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd></dl>
-      <dl><dt><kbd>Esc</kbd></dt><dd>Clear focus; close this dialog</dd></dl>
-      <dl><dt><kbd>s</kbd></dt><dd>Focus the search field</dd></dl>
-      <dl><dt><kbd>u</kbd></dt><dd>Go to source code</dd></dl>
-      <dl><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd></dl>
-      <dl><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd></dl>
-      <dl><dt><kbd>⏎</kbd></dt><dd>Go to active search result</dd></dl>
-    </div>
-    <div id="errors" class="hidden">
-      <h1>Errors</h1>
-      <pre id="errorsText"></pre>
-    </div>
-    <script src="main.js"></script>
-  </body>
-</html>
+    </head>
+    <body>
+        <nav>
+            <a class="logo" href="#">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 120 120"
+                    fill="none"
+                >
+                    <defs>
+                        <linearGradient
+                            id="plumGradient"
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="100%"
+                        >
+                            <stop offset="0%" style="stop-color: #9333ea" />
+                            <stop offset="50%" style="stop-color: #ec4899" />
+                            <stop offset="100%" style="stop-color: #f59e0b" />
+                        </linearGradient>
+                    </defs>
 
+                    <!-- Wrap everything in a group with scaling and shifting -->
+                    <g transform="translate(-15,0) scale(0.75)">
+                        <!-- Main plum body -->
+                        <ellipse
+                            cx="60"
+                            cy="70"
+                            rx="35"
+                            ry="40"
+                            fill="url(#plumGradient)"
+                        />
+
+                        <!-- Plum dimple -->
+                        <path
+                            d="M45 45 Q60 35 75 45"
+                            stroke="#7c3aed"
+                            stroke-width="2"
+                            fill="none"
+                            opacity="0.6"
+                        />
+
+                        <!-- Trie structure overlay -->
+                        <g
+                            opacity="0.8"
+                            stroke="white"
+                            stroke-width="1.5"
+                            fill="none"
+                        >
+                            <circle cx="60" cy="60" r="3" fill="white" />
+                            <line x1="60" y1="60" x2="45" y2="75" />
+                            <line x1="60" y1="60" x2="75" y2="75" />
+                            <line x1="60" y1="60" x2="60" y2="80" />
+                            <circle cx="45" cy="75" r="2" fill="white" />
+                            <circle cx="75" cy="75" r="2" fill="white" />
+                            <circle cx="60" cy="80" r="2" fill="white" />
+                            <line x1="45" y1="75" x2="35" y2="90" />
+                            <line x1="45" y1="75" x2="50" y2="90" />
+                            <line x1="75" y1="75" x2="85" y2="90" />
+                            <circle cx="35" cy="90" r="1.5" fill="white" />
+                            <circle cx="50" cy="90" r="1.5" fill="white" />
+                            <circle cx="85" cy="90" r="1.5" fill="white" />
+                        </g>
+
+                        <!-- Cache layers effect -->
+                        <g opacity="0.3">
+                            <ellipse
+                                cx="60"
+                                cy="70"
+                                rx="45"
+                                ry="50"
+                                fill="none"
+                                stroke="url(#plumGradient)"
+                                stroke-width="1"
+                            />
+                            <ellipse
+                                cx="60"
+                                cy="70"
+                                rx="55"
+                                ry="60"
+                                fill="none"
+                                stroke="url(#plumGradient)"
+                                stroke-width="0.5"
+                            />
+                        </g>
+                    </g>
+                </svg>
+            </a>
+        </nav>
+        <div id="navWrap">
+            <input
+                type="search"
+                id="search"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="`s` to search, `?` to see more options"
+            />
+            <div id="sectNav" class="hidden"><ul id="listNav"></ul></div>
+        </div>
+        <section>
+            <p id="status">Loading...</p>
+            <h1 id="hdrName" class="hidden">
+                <span></span><a href="#">[src]</a>
+            </h1>
+            <div id="fnProto" class="hidden">
+                <pre><code id="fnProtoCode"></code></pre>
+            </div>
+            <div id="tldDocs" class="hidden"></div>
+            <div id="sectParams" class="hidden">
+                <h2>Parameters</h2>
+                <div id="listParams"></div>
+            </div>
+            <div id="sectFnErrors" class="hidden">
+                <h2>Errors</h2>
+                <div id="fnErrorsAnyError">
+                    <p>
+                        <span class="tok-type">anyerror</span> means the error
+                        set is known only at runtime.
+                    </p>
+                </div>
+                <div id="tableFnErrors"><dl id="listFnErrors"></dl></div>
+            </div>
+            <div id="sectSearchResults" class="hidden">
+                <h2>Search Results</h2>
+                <ul id="listSearchResults"></ul>
+            </div>
+            <div id="sectSearchNoResults" class="hidden">
+                <h2>No Results Found</h2>
+                <p>
+                    Press escape to exit search and then '?' to see more
+                    options.
+                </p>
+            </div>
+            <div id="sectFields" class="hidden">
+                <h2>Fields</h2>
+                <div id="listFields"></div>
+            </div>
+            <div id="sectTypes" class="hidden">
+                <h2>Types</h2>
+                <ul id="listTypes" class="columns"></ul>
+            </div>
+            <div id="sectNamespaces" class="hidden">
+                <h2>Namespaces</h2>
+                <ul id="listNamespaces" class="columns"></ul>
+            </div>
+            <div id="sectGlobalVars" class="hidden">
+                <h2>Global Variables</h2>
+                <table>
+                    <tbody id="listGlobalVars"></tbody>
+                </table>
+            </div>
+            <div id="sectValues" class="hidden">
+                <h2>Values</h2>
+                <table>
+                    <tbody id="listValues"></tbody>
+                </table>
+            </div>
+            <div id="sectFns" class="hidden">
+                <h2>Functions</h2>
+                <dl id="listFns"></dl>
+            </div>
+            <div id="sectErrSets" class="hidden">
+                <h2>Error Sets</h2>
+                <ul id="listErrSets" class="columns"></ul>
+            </div>
+            <div id="sectDocTests" class="hidden">
+                <h2>Example Usage</h2>
+                <pre><code id="docTestsCode"></code></pre>
+            </div>
+            <div id="sectSource" class="hidden">
+                <h2>Source Code</h2>
+                <pre><code id="sourceText"></code></pre>
+            </div>
+        </section>
+        <div id="helpDialog" class="hidden">
+            <h1>Keyboard Shortcuts</h1>
+            <dl>
+                <dt><kbd>?</kbd></dt>
+                <dd>Show this help dialog</dd>
+            </dl>
+            <dl>
+                <dt><kbd>Esc</kbd></dt>
+                <dd>Clear focus; close this dialog</dd>
+            </dl>
+            <dl>
+                <dt><kbd>s</kbd></dt>
+                <dd>Focus the search field</dd>
+            </dl>
+            <dl>
+                <dt><kbd>u</kbd></dt>
+                <dd>Go to source code</dd>
+            </dl>
+            <dl>
+                <dt><kbd>↑</kbd></dt>
+                <dd>Move up in search results</dd>
+            </dl>
+            <dl>
+                <dt><kbd>↓</kbd></dt>
+                <dd>Move down in search results</dd>
+            </dl>
+            <dl>
+                <dt><kbd>⏎</kbd></dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div id="errors" class="hidden">
+            <h1>Errors</h1>
+            <pre id="errorsText"></pre>
+        </div>
+        <script src="main.js"></script>
+    </body>
+</html>
