@@ -7,6 +7,7 @@
 const std = @import("std");
 const plugins = @import("./plugin.zig");
 
+/// This struct represents the orchestrator that manages the plugins.
 pub const Orchestrator = struct {
     allocator: std.mem.Allocator,
     plugins: std.array_list.Managed(*plugins.Plugin),
