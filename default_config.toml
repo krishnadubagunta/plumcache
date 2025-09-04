@@ -1,0 +1,10 @@
+port = 8080
+delimiter = ":"
+
+[plugins.eviction]
+# Array of plugins to use for eviction
+srcSet = [""]
+
+[plugins.queue]
+# Array of plugins to use for queueing
+srcSet = [""]
