@@ -120,6 +120,12 @@ pub fn build(b: *std.Build) void {
         .install_subdir = "docs",
     });
 
+    const run_doc_cmd = b.addSystemCommand(&[_][]const u8{ "sudo", "./scripts/copy_docs.sh" });
+
+    var run_doc_step = b.step("copy_docs", "Copy docs to zig-out/docs");
+    run_doc_cmd.step.dependOn(&install_docs.step);
+    run_doc_step.dependOn(&run_doc_cmd.step);
+
     const docs_step = b.step("docs", "Install docs into zig-out/docs");
-    docs_step.dependOn(&install_docs.step);
+    docs_step.dependOn(run_doc_step);
 }
