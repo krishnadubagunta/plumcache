@@ -39,8 +39,7 @@ pub fn handleConnection(conn: std.net.Stream) !void {
     std.debug.print("Line: {s}\n", .{line});
     // Tokenize the input line using space as delimiter
     var tokens: std.mem.TokenIterator(u8, .sequence) = lib.tokenize.Tokenize(line, " ");
-    // std.debug.print("Tokens: {?s} {?s}\n", .{ tokens.next(), tokens.rest() });
-    // tokens.reset();
+
     // Extract the command (first token) and process it
     if (tokens.next()) |cmd| {
         // Parse the command string into a Command enum, handling invalid commands

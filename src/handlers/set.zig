@@ -7,7 +7,6 @@
 const std = @import("std");
 const plum = @import("../core/plum.zig");
 const tokenize = @import("../utils/tokenize.zig");
-const allocator = std.heap.page_allocator;
 
 /// `Set` handles the SET command by storing a key-value pair in the PlumStore.
 ///
@@ -26,6 +25,15 @@ pub fn Set(args: []const u8) ![]const u8 {
     var tokens: std.mem.TokenIterator(u8, .sequence) = tokenize.Tokenize(args, " ");
 
     var plumStore = plum.GetPlumStore();
-    try plumStore.set(tokens.next().?, tokens.next().?);
+    plumStore.set(tokens.next().?, tokens.next().?) catch |err| switch (err) {
+        error.OutOfMemory => {
+            tokens.reset();
+            std.debug.print("Out of memory, Key: {s}, Value: {s}", .{
+                .Key = tokens.next().?,
+                .Value = tokens.next().?,
+            });
+            return "ERROR";
+        },
+    };
     return "OK";
 }
