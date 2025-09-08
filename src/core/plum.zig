@@ -143,7 +143,7 @@ pub const PlumStore = struct {
     /// Errors:
     ///   - Can return errors from `tokenize.Tokenize`, `trie.PlumTrie.init`, `fetched_trie.set`, `new_entry`,
     ///     or `std.StringHashMap.put`.
-    pub fn set(self: *PlumStore, key: []const u8, value: []const u8) !void {
+    pub fn set(self: *PlumStore, key: []const u8, value: []const u8) error{OutOfMemory}!void {
         if (std.mem.indexOf(u8, key, ":") != null) {
             // If the key contains ':', it's treated as a trie path.
             // The part before the first ':' is the namespace, the rest is the path within the trie.

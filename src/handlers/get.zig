@@ -20,9 +20,7 @@ const tokenize = @import("../utils/tokenize.zig");
 ///   - A slice of `u8` containing the value if found, or "NOT_FOUND" if the key doesn't exist.
 pub fn Get(args: []const u8) []const u8 {
     var tokens: std.mem.TokenIterator(u8, .sequence) = tokenize.Tokenize(args, " ");
-    const key: []const u8 = tokens.next().?;
 
     var plumStore = plum.GetPlumStore();
-    const value = plumStore.get(key);
-    return value orelse "NOT_FOUND";
+    return plumStore.get(tokens.next().?) orelse "NOT_FOUND";
 }
