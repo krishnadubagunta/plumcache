@@ -1,6 +1,11 @@
-//! By convention, main.zig is where your main function lives in the case that
-//! you are building an executable. If you are making a library, the convention
-//! is to delete this file and start with root.zig instead.
+//! This module contains the `main` function, the entry point of the PlumCache server application.
+//!
+//! The `main` function is responsible for:
+//! 1. Initializing the necessary components of PlumCache, such as the orchestrator and the store.
+//! 2. Setting up and starting the TCP server to listen for incoming client connections.
+//! 3. Continuously accepting new client connections and delegating their handling to the `server.handleConnection` function.
+//!
+//! This file adheres to the Zig convention where `main.zig` hosts the primary executable logic.
 const std = @import("std");
 const lib = @import("plum_lib");
 const server = @import("server.zig");
@@ -9,7 +14,7 @@ pub fn main() !void {
     const allocator = std.heap.page_allocator;
     const address = try std.net.Address.parseIp("127.0.0.1", 8080);
     lib.orchestration.Orchestrator.init(allocator);
-    try lib.plum.InitPlumStore(allocator);
+    try lib.store.InitPlumStore(allocator);
 
     var listener = try address.listen(.{
         .reuse_address = true,
