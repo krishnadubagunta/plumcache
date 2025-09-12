@@ -1,14 +1,23 @@
-//! This module defines the Orchestrator, responsible for plugin management in PlumCache.
+//! This module defines the Orchestrator, a central component in PlumCache
+//! responsible for managing the entire lifecycle of plugins.
 //!
-//! The Orchestrator acts as a central coordinator for the plugin system, handling the
-//! entire plugin lifecycle from discovery to registration. It serves as an intermediary
-//! between the core database and its extensibility mechanisms.
+//! The Orchestrator acts as an extensibility manager, enabling dynamic discovery,
+//! loading, initialization, and coordination of various plugins. It serves
+//! as the bridge between the core database functionality and external
+//! extensions, allowing PlumCache to be customized and expanded without
+//! altering its core codebase.
 //!
-//! Initializing the Orchestrator facilitates the following:
-//!   1. Download of all the plugins listed in config file from github
-//!   2. Loads all the plugins into memory and initializes them
-//!   3. Registers the subscribers to various hooks in the system
-//!   4. Manages plugin dependencies and execution order
+//! Key responsibilities include:
+//! - **Plugin Discovery**: Identifying available plugins based on configuration.
+//! - **Plugin Loading**: Loading plugin binaries or modules into memory.
+//! - **Plugin Initialization**: Setting up plugins and preparing them for execution.
+//! - **Hook Management**: Registering plugin functions to specific hooks within
+//!   the PlumCache operation lifecycle (e.g., `BeforeSave`, `AfterGet`).
+//! - **Dependency Resolution**: (Future) Managing inter-plugin dependencies.
+//! - **Execution Order**: (Future) Ensuring plugins run in a defined order.
+//!
+//! By centralizing plugin management, the Orchestrator ensures a robust and
+//! flexible architecture for extending PlumCache's capabilities.
 const std = @import("std");
 const plugins = @import("./plugin.zig");
 
@@ -31,10 +40,13 @@ pub const Orchestrator = struct {
     /// Parameters:
     ///   - `allocator`: Memory allocator to use for orchestrator-related allocations.
     ///
+    /// Returns:
+    ///   - A new `Orchestrator` instance.
+    ///
     /// Note: The current implementation initializes the orchestrator but doesn't
     /// retain a reference to it, which would need to be addressed for actual use.
-    pub fn init(allocator: std.mem.Allocator) void {
-        _ = Orchestrator{ .allocator = allocator, .plugins = std.array_list.Managed(*plugins.Plugin).init(allocator) };
+    pub fn init(allocator: std.mem.Allocator) Orchestrator {
+        return Orchestrator{ .allocator = allocator, .plugins = std.array_list.Managed(*plugins.Plugin).init(allocator) };
 
         // load plugins from toml.
         // _orchestrator.loadPlugins();
@@ -50,6 +62,9 @@ pub const Orchestrator = struct {
     /// 5. Register their hooks with the appropriate systems
     ///
     /// Currently this function is stubbed out for future implementation.
+    ///
+    /// Parameters:
+    ///   - `self`: A pointer to the `Orchestrator` instance.
     fn loadPlugins(_: *Orchestrator) void {
         // TODO: Implement plugin loading logic here.
         @compileError("Todo! Implement plugin loading logic here.");

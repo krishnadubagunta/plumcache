@@ -45,6 +45,13 @@ pub const Plugin = struct {
     name: []const u8,
     /// The point in execution where this plugin should be triggered
     hook: HookType,
-    /// Function to call when the hook is triggered
+    /// Function to call when the hook is triggered.
+    ///
+    /// Parameters:
+    ///   - `key`: The key involved in the database operation.
+    ///   - `value`: The value involved in the database operation.
+    ///
+    /// Returns:
+    ///   - `void`. This function does not return a value.
     run: *const fn (key: []u8, value: []u8) void,
 };

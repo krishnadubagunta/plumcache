@@ -117,7 +117,7 @@
 //!
 //! ### 5. Exit
 //! Simply close the netcat session with `Ctrl+D` or `Ctrl+C`.
-pub const plum = @import("core/plum.zig");
+pub const store = @import("core/store.zig");
 pub const commands = @import("utils/commands.zig");
 pub const handlers = @import("handlers/handler.zig");
 pub const tokenize = @import("utils/tokenize.zig");
