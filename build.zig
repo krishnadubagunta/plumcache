@@ -70,6 +70,14 @@ pub fn build(b: *std.Build) void {
     // step when running `zig build`).
     b.installArtifact(exe);
 
+    const tomlPkg = b.dependency("toml", .{}).module("toml");
+    lib.root_module.addImport("toml", tomlPkg);
+    exe.root_module.addImport("toml", tomlPkg);
+
+    const plumplugin = b.dependency("plumplugin", .{}).module("plumplugin");
+    lib.root_module.addImport("plumplugin", plumplugin);
+    exe.root_module.addImport("plumplugin", plumplugin);
+
     // This *creates* a Run step in the build graph, to be executed when another
     // step is evaluated that depends on it. The next line below will establish
     // such a dependency.
