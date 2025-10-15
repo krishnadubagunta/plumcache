@@ -41,8 +41,8 @@
             .hash = "toml-0.3.0-bV14BTd8AQA-wZERtB3dvRE3eSZ-m48AyXFUGkZ_Tm3d",
         },
         .plumplugin = .{
-            .url = "../plumplugin",
-            .hash = "plumplugin-1.0.3-6krBI0svAAC1wyBRx3lgK5UcI3g3pS8Di2LgAbPIFAFF",
+            .url = "git+https://github.com/krishnadubagunta/plumplugin.git#b8b8fd897cdc1750b052db6d404e08d767cef2d9",
+            .hash = "plumplugin-1.0.3-6krBI1IvAADelMElciwdyjrZyESb016_kRbR5YV1TRR8",
         },
     },
     .paths = .{
