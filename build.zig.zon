@@ -37,16 +37,17 @@
     // internet connectivity.
     .dependencies = .{
         .toml = .{
-            .url = "git+https://github.com/sam701/zig-toml#929d62050fb0e3aad38f7182231afcf2b0dc31c0",
-            .hash = "toml-0.3.0-bV14BfV7AQD8DkuQI7skP8ekQTaBYKTO0MY_35Cw_EXo",
+            .url = "git+https://github.com/sam701/zig-toml#3aaeb0bf14935eabae118196f7949b404a42f8ea",
+            .hash = "toml-0.3.0-bV14BTd8AQA-wZERtB3dvRE3eSZ-m48AyXFUGkZ_Tm3d",
+        },
+        .plumplugin = .{
+            .url = "git+https://github.com/krishnadubagunta/plumplugin.git#b8b8fd897cdc1750b052db6d404e08d767cef2d9",
+            .hash = "plumplugin-1.0.3-6krBI1IvAADelMElciwdyjrZyESb016_kRbR5YV1TRR8",
         },
     },
     .paths = .{
         "build.zig",
         "build.zig.zon",
         "src",
-        // For example...
-        //"LICENSE",
-        //"README.md",
     },
 }

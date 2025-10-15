@@ -19,7 +19,8 @@
 //! By centralizing plugin management, the Orchestrator ensures a robust and
 //! flexible architecture for extending PlumCache's capabilities.
 const std = @import("std");
-const plugins = @import("./plugin.zig");
+const extractor = @import("utils/config/extractor.zig");
+const plumplugin = @import("plumplugin");
 
 /// `Orchestrator` is the central component responsible for managing the plugin ecosystem.
 ///
@@ -29,7 +30,7 @@ pub const Orchestrator = struct {
     /// Memory allocator used for dynamic allocations within the orchestrator
     allocator: std.mem.Allocator,
     /// Managed list of active plugins that have been loaded into the system
-    plugins: std.array_list.Managed(*plugins.Plugin),
+    plugins: std.ArrayListUnmanaged(*const plumplugin.plugin.Plugin),
 
     /// Initializes a new `Orchestrator` instance with the provided allocator.
     ///
@@ -45,11 +46,16 @@ pub const Orchestrator = struct {
     ///
     /// Note: The current implementation initializes the orchestrator but doesn't
     /// retain a reference to it, which would need to be addressed for actual use.
-    pub fn init(allocator: std.mem.Allocator) Orchestrator {
-        return Orchestrator{ .allocator = allocator, .plugins = std.array_list.Managed(*plugins.Plugin).init(allocator) };
+    pub fn init(allocator: std.mem.Allocator) !Orchestrator {
+        const configurator = extractor.Configurator.init(allocator);
+        const config = try configurator.readFromFile();
+        const pluginsLen = config.plugins.eviction.srcSet.len + config.plugins.eviction.srcSet.len;
+        const _orchestrator = Orchestrator{
+            .allocator = allocator,
+            .plugins = std.ArrayListUnmanaged(*const plumplugin.plugin.Plugin).initCapacity(allocator, pluginsLen) catch unreachable,
+        };
 
-        // load plugins from toml.
-        // _orchestrator.loadPlugins();
+        return _orchestrator;
     }
 
     /// Loads plugins based on configuration settings.
@@ -65,8 +71,33 @@ pub const Orchestrator = struct {
     ///
     /// Parameters:
     ///   - `self`: A pointer to the `Orchestrator` instance.
-    fn loadPlugins(_: *Orchestrator) void {
+    pub fn loadPlugins(self: *Orchestrator) !void {
         // TODO: Implement plugin loading logic here.
-        @compileError("Todo! Implement plugin loading logic here.");
+        if (@inComptime()) {
+            @compileError("Error: Running in comptime");
+        }
+        const configurator = extractor.Configurator.init(self.allocator);
+        const config = try configurator.readFromFile();
+        if (config.plugins.eviction.srcSet.len > 0) {
+            for (config.plugins.eviction.srcSet) |src| {
+                std.debug.print("Plugin Eviction: {s}", .{src});
+                const plugin = plumplugin.loadPlugin(src) catch |err| {
+                    std.debug.print("Error loading plugin: {}\n", .{err});
+                    return err;
+                };
+                try self.plugins.append(self.allocator, plugin);
+            }
+        }
+
+        if (config.plugins.queue.srcSet.len > 0) {
+            for (config.plugins.queue.srcSet) |src| {
+                std.debug.print("Plugin Queue: {s}", .{src});
+                const plugin = plumplugin.loadPlugin(src) catch |err| {
+                    std.debug.print("Error loading plugin: {}\n", .{err});
+                    return err;
+                };
+                try self.plugins.append(self.allocator, plugin);
+            }
+        }
     }
 };
