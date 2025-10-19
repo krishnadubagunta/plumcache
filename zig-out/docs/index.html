@@ -181,6 +181,23 @@
 
             #navWrap {
                 padding: 1em;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            #navWrap > a {
+                background-color: #8b5cf6;
+                color: #fff;
+                padding: 1em 1em;
+                border-radius: 8px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            #navWrap > a:hover {
+                background-color: #e5e7eb;
+                color: #374151;
             }
 
             #sectNav {
@@ -746,6 +763,12 @@
                 </div>
             </div>
             <div id="navWrap">
+                <a
+                    class="button"
+                    href="https://github.com/krishnadubagunta/plumcache/issues/new"
+                >
+                    Feedback
+                </a>
                 <input
                     type="search"
                     id="search"
